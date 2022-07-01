@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "ES6",
+        "outDir": "./build",
+        "watch": true
+    },
+    "files": [
+        "src/index.ts"
+    ]
+}

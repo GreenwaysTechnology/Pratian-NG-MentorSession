@@ -1,0 +1,98 @@
+
+
+
+
+
+
+				Angular    React   Vue
+
+      -------------------------------------------------------------			
+
+				   TS
+	     ----------------------------------------------
+                                 (ES 6)
+			         (ES 5)
+				JAVASCRIPT
+
+
+TS = ES6 + TYPE SYSTEM
+
+TS Compiler converts code written in ts(es6)  to ES 5 by default
+
+es6 ---- es5
+let ----> var
+
+ts
+ langugage fundmentals
+  let,const
+  variables
+literals -how many literals
+data types ?
+operators
+control structures
+booleans
+loops
+..
+functions
+  args,parameters,return value
+fp concepts
+arrow fun
+
+oop:
+class
+constru
+object creational patterns
+object types
+arrays
+
+generics
+
+modules
+
+decorators
+
+Angular
+
+ TS
+ RXJS
+
+TS;
+ 
+/.
+
+Task-1 : How to refactor the below code?
+
+//how to refactor this code
+
+class User {
+    userId: string = "00A12"
+    userName: string = "userName"
+    status: boolean = false
+    constructor(userId: string, userName: string, status: boolean) {
+        this.userId = userId
+        this.userName = userName
+        this.status = status
+    }
+}
+
+class UserService {
+    findAll() {
+        return "findAll"
+    }
+}
+
+class UserComponent {
+    //has-a relationship :Dependency injection
+    userService: UserService
+    constructor(userService: UserService) {
+        this.userService = userService
+    }
+}
+
+function main() {
+    let user = new User("100A2", "Subramanian", true)
+    let userService = new UserService()
+    let userComponent = new UserComponent(userService);
+    console.log(user,userComponent)
+}
+main()
