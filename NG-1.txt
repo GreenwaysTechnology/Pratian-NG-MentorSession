@@ -1,0 +1,71 @@
+Angular:
+
+Web Apps:
+
+1.static web - only html pages
+
+2.dynamic web
+   create html pages on demand using programs
+ CGI
+ java - jee-servlet jsp
+ microsoft-asp.net
+ php
+ node.js
+ python 
+ etc..
+3.webservices 
+   generate data and send to client apps
+  SOAP,RESTFul,GraphQL
+
+4.SPA - Single page web apps built at client side
+  Angular,React,Vue are SPA frameworks and libs
+....................................................................................
+
+Angular is suitable for building SPA apps.
+Angular is object oriented framework, angular is written in typescript
+In Angular every thing object.
+In Angular objects are created by developer in code, automated via IOC/DI
+Angular is based on MVC Design pattern
+
+   View -----|controller----Service(state and biz logic)
+Angular is modular framework
+  Angular uses two types modular pattern
+1.ES 6 modules
+	how to share code and link files
+2.Angular modules
+     Logical modularity- Grouping objects at runtime
+
+Angular implements advanced async programming model using "rxjs"
+...................................................................................
+			Angular Objects
+
+....................................................................................
+
+Two category of Objects:
+
+1.Angular infra objects
+   Which makes up your app
+
+1.module
+2.component
+3.service
+4.directive
+5.pipes
+
+2.Angular Domain Objects
+  Object which represents eg doctor
+
+domain objects are javascript literal object or array
+  
+
+
+
+
+
+
+
+
+
+
+
+

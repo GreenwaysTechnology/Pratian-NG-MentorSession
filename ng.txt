@@ -1,0 +1,5 @@
+			Coding Standards
+
+https://angular.io/guide/styleguide
+
+Project Structure
