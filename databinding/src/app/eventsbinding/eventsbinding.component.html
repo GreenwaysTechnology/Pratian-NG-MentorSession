@@ -1,0 +1,36 @@
+<div>
+    <!-- Button and Listenter -->
+    <button (click)="onClick()">Click</button>
+    <!-- Sending some data to the component's Listener -->
+    <section>
+        <button (click)="onSend('Hello')">Send Data</button>
+    </section>
+    <ul>
+        <li *ngFor="let skill of skills">
+            <span (click)="onSelect(skill)">{{skill}}</span>
+        </li>
+    </ul>
+    <h3>{{selectedItem}}</h3>
+</div>
+<div>
+    <p>Two way Data binding: with Listener </p>
+    <div>
+        <h5>{{value1}}</h5>
+        <input (input)="onInput($event)">
+    </div>
+    <p>Two way Data binding: without Listener </p>
+    <div>
+        <h5>{{value2}}</h5>
+        <input (input)="value2=$event.target.value">
+    </div>
+    <p>Two way Data binding: without Listener Using attribute pattern [] and() </p>
+    <div>
+        <h5>{{value3}}</h5>
+        <input  [value]="'default Value'"    (input)="value3=$event.target.value">
+    </div>
+    <p>Two way Data binding: without Listener Using attribute pattern [] and() -Banna in a box notation </p>
+    <div>
+        <h5>{{value4}}</h5>
+        <input [(ngModel)]="value4">
+    </div>
+</div>

@@ -750,25 +750,335 @@ export class PageComponent {
 
 }
 .....................................................................................
+			 Data Binding
+....................................................................................
+
+Component : state +methods + template
+Data binding:
+ Transfering state to ui(view)
+
+Types of databinding
+
+1.interpolation
+2.property binding
+3.attribute binding
+4.event binding
+5.two way data binding
+6.class binding
+7.style binding
 
 
 
 
+1.interploation
+
+Transfering data(State) from component to view.
+
+State:
+1.Primitives
+2.Objects and Arrays
+
+For loop and Array of data and ui design:
+
+1.List view  - ul ...li
+2.card View -- div
+3.Grid View - table ..tr
+
+
+Simple data binding:
+<h3>{{message}} {{name}}</h3>
+<h3>{{likes}}</h3>
+<h3>{{status ? "Available" :"Not Available"}}</h3>
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-greeter',
+  templateUrl: './greeter.component.html',
+  styles: [
+  ]
+})
+export class GreeterComponent implements OnInit {
+
+  //state variable : primitive :string,number,boolean
+  name: string = "Subramanian Murugan"
+  message: string = "Hello"
+  likes: number = 100;
+  status: boolean = true
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+..............................................................................
+import { Component, OnInit } from '@angular/core';
+import { Customer } from '../types/customer.type';
+
+@Component({
+  selector: 'app-customer',
+  templateUrl: './customer.component.html',
+  styles: [
+  ]
+})
+export class CustomerComponent implements OnInit {
+
+  //customer object
+  customer: Customer = {
+    id: 1,
+    name: 'Subramanian',
+    gender: 'Male',
+    status: "Available",
+    address: {
+      city: 'Coimbatore'
+    }
+  }
+  //List 
+  //customers:Customer[] = []
+  customers: Array<Customer> = [
+    {
+      id: 1,
+      name: 'Subramanian',
+      gender: 'Male',
+      status: "Available",
+      address: {
+        city: 'Coimbatore'
+      }
+    },
+    {
+      id: 2,
+      name: 'Ram',
+      gender: 'Male',
+      status: "Available",
+      address: {
+        city: 'Coimbatore'
+      }
+    },
+    {
+      id: 3,
+      name: 'Geetha',
+      gender: 'Female',
+      status: "Available",
+      address: {
+        city: 'Coimbatore'
+      }
+    }
+  ]
+
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+<div>
+    <p>Id {{customer.id}}</p>
+    <p>Name {{customer.name}}</p>
+    <p>Status {{customer.status}}</p>
+    <p>City {{customer.address.city}}</p>
+</div>
+<!-- for loop : card -->
+<h1>Card View of Customers</h1>
+<div>
+    <!-- card -->
+    <div *ngFor="let customer of customers">
+        <p>Id {{customer.id}}</p>
+        <p>Name {{customer.name}}</p>
+        <p>Status {{customer.status}}</p>
+        <p>City {{customer.address.city}}</p>
+    </div>
+</div>
+.....................................................................................				       Attribute Binding
+
+
+Property  and Attribute Binding:
+................................
+
+What is attribute?
+ property of dom elemement
+
+<img src="logo.png"/>
+      |
+   attribute
+
+<button disabled>Hello</button>
+          |
+       attribute
+
+Types of attributes;
+
+1.static attribute
+   the attribute value is hardcoded, cant be changed dynamically.
+2.dynamic attributes
+   the attribute value is interploated, can be changed dynamically.
+
+[] - notation is used to make attribute dynamic
+
+<img [src]="variable"/>
+
+variable is state which holds the image location.
+here we are interploating image src dynamically -  attribute binding.
+....................................................................................
+				Property Binding
+...................................................................................
+
+Passing data from the parent component to child component
+
+[] - notation is used to pass props from the parent to child
+
+Parent component template
+
+<app-child [propName]="PropValue">
+
+PropValue is variable, can hold any type of value(primitive,objects,array)
+[] - property notation
+
+<element [propertyName]="PropertyValue">
+
+code:
+Parent:
+<div>
+    <h2>Parent</h2>
+    <app-child 
+    [message]="'Hello! I am from Parent'" 
+    [name]="name"  
+    [address]="address"
+    [skills]="skills"
+    >
+
+</app-child>
+<app-child 
+    [message]="'Hai! I am from Parent'" 
+    [name]="name"  
+    [address]="address"
+    [skills]="skills"
+    >
+
+</app-child>
+<app-child 
+    [message]="'Greet! I am from Parent'" 
+    [name]="name"  
+    [address]="address"
+    [skills]="skills"
+    >
+
+</app-child>
+</div>
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-parent',
+  templateUrl: './parent.component.html',
+  styles: [
+  ]
+})
+export class ParentComponent implements OnInit {
+
+  //state
+  //primitive variable
+  name: string = "Subramanian"
+
+  //object
+  address = {
+    city: 'Coimbatore'
+  }
+  skills: Array<string> = ["javascript", "Angular", "Typescript"]
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+
+child:
+<div>
+    <h2>Child</h2>
+    <h3>Data Got From Parent</h3>
+    <p>{{message}}</p>
+    <p>{{name}}</p>
+    <p>{{address.city}}</p>
+    <app-skillschild [skills]="skills"></app-skillschild>
+   
+</div>
+import { Component, Input, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  templateUrl: './child.component.html',
+  styles: [
+  ]
+})
+export class ChildComponent implements OnInit {
+
+  @Input()
+  message!: string
+  @Input()
+  name!: string;
+  @Input()
+  address!: any
+  @Input()
+  skills!: string[]
 
 
 
+  constructor() { }
 
+  ngOnInit(): void {
+  }
 
+}
+....
+sub child
+<ul>
+    <li *ngFor="let skill of skills">
+        {{skill}}
+    </li>
+</ul>
+import { Component, Input, OnInit } from '@angular/core';
 
+@Component({
+  selector: 'app-skillschild',
+  templateUrl: './skillschild.component.html',
+  styles: [
+  ]
+})
+export class SkillschildComponent implements OnInit {
 
+  @Input()
+  skills!:Array<string>
+  constructor() { }
 
+  ngOnInit(): void {
+  }
 
+}
+.....................................................................................
+				  Event Binding
+.....................................................................................
+                              How to enable user interactions?
+.....................................................................................
 
+How to implement event  handling?
 
+Plain js:
 
+<button onclick="listener()">Click</button>
 
+In Angular , event handling is done using a symbol called ()
 
+<button (NameoftheEvent)="listener()">Click</button>
+<button (click)="listener()">Click</button>
 
+Event Object:
+  The Object acts as proxy object between DOM element and listener
+if you want to access dom element inside listenr - we use event object
+in angular dom event object is avaiable via "$event" variable
+
+$event variable should be passed as arg to the listener.
+
+ngModel - It is object used to transfer data between ui and component
 
 
 

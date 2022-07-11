@@ -3,6 +3,10 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { InterpolationModule } from './interpolation/interpolation.module';
+import { AttributebindingModule } from './attributebinding/attributebinding.module';
+import { PropsbindingModule } from './propsbinding/propsbinding.module';
+import { EventsbindingModule } from './eventsbinding/eventsbinding.module';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -10,7 +14,11 @@ import { InterpolationModule } from './interpolation/interpolation.module';
   ],
   imports: [
     BrowserModule,
-    InterpolationModule
+    InterpolationModule,
+    AttributebindingModule,
+    PropsbindingModule,
+    EventsbindingModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
