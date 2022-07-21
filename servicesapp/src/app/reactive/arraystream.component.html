@@ -1,0 +1,14 @@
+<div>
+    <h1>List Using Stream</h1>
+    <ul>
+        <li *ngFor="let item of numList">
+            {{item}}
+        </li>
+    </ul>
+    <h1>List Using Stream with Async Pipe</h1>
+    <ul>
+        <li *ngFor="let item of numList$ | async">
+            {{item}}
+        </li>
+    </ul>
+</div>

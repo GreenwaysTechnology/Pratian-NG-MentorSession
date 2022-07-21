@@ -1,0 +1,42 @@
+<div>
+    <h4>Post Form</h4>
+    <!-- todo:remove this json once the form -->
+    {{post | json}}
+    <form #postForm="ngForm" (ngSubmit)="onSubmit()" >
+        <div class="form-group">
+            <label for="id">ID</label>
+            <input type="text" #idError="ngModel"  [(ngModel)]="post.id" name="id" class="form-control" id="id" required>
+        </div>
+        <!--  -->
+        <div class="alert alert-danger" [hidden]="idError.valid || idError.pristine" >
+            ID is Required 
+        </div>
+
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" [(ngModel)]="post.title" name="title" class="form-control" id="title" #titleError="ngModel" required>
+        </div>
+        <div class="alert alert-danger" [hidden]="titleError.valid || titleError.pristine" >
+            Title is Required 
+        </div>
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" [(ngModel)]="post.author" name="name" class="form-control" id="name" #nameError="ngModel" required>
+        </div>
+        <div class="alert alert-danger" [hidden]="nameError.valid || nameError.pristine" >
+            Name is Required 
+        </div>
+        <!--  -->
+        <div class="form-group">
+            <label for="category">Category</label>
+         <select class="form-control" id="category" name="category" [(ngModel)]="post.category">
+            <option *ngFor="let cat of categories" [value]="cat">
+                {{cat}}
+            </option>
+            </select>
+        </div>
+        <button [disabled]="!postForm.form.valid" type="submit" class="btn btn-success">Submit</button>
+
+    </form>
+</div>

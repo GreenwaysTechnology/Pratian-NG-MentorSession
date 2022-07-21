@@ -1,0 +1,9 @@
+<div>
+    <ul>
+        <li *ngFor="let skill of skills">
+            <p (click)="changeColor()" [class.highlight]="isColorChanged">{{skill}}</p>
+        </li>
+    </ul>
+
+
+</div>

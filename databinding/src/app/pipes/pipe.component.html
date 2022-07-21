@@ -1,0 +1,32 @@
+<div>
+    <h1>String Pipes</h1>
+    <h2>Name {{name | uppercase}}</h2>
+    <h2>Name {{name | titlecase}}</h2>
+</div>
+<div>
+    <h1>Number Pipes</h1>
+    <h2>Stock Price {{stockValue | currency}}</h2>
+    <h2>Stock Price {{stockValue | currency:'INR'}}</h2>
+</div>
+<div>
+    <h1>Date</h1>
+    <p>{{date | date}}</p>
+    <p>{{date | date:'short'}}</p>
+    <p>{{date | date:'dd/MM/yyyy'}}</p>
+</div>
+<div>
+    <!-- Pipe chaining -->
+    <p>{{date | date:'medium' | uppercase}}</p>
+</div>
+<div>
+    <h1>Object -JSON</h1>
+    <p>{{emp.id}} {{emp.name}} {{emp.city}}</p>
+    <p>{{emp | json}}</p>
+</div>
+<div>
+    <h1>Custom Pipe</h1>
+    {{stockValue | decimalFraction}}
+    {{stockValue | decimalFraction:2}}
+    {{stockValue | decimalFraction:3}}
+
+</div>

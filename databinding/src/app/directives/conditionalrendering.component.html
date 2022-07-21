@@ -1,0 +1,46 @@
+<div>
+    <h1>If</h1>
+    <div *ngIf="isAvailable; else notAvailable">
+        <h3>Available</h3>
+    </div>
+    <!-- else block  -->
+    <ng-template #notAvailable>
+        <h3>Not Available</h3>
+    </ng-template>
+</div>
+<div>
+    <h1>Progress Bar </h1>
+    <div *ngIf="loading; else notLoading  ">
+        <h2>{{status}}</h2>
+    </div>
+    <ng-template #notLoading>
+        <div *ngFor="let user of users">
+            <h3>{{user.id}}</h3>
+            <p>{{user.name}}</p>
+        </div>
+    </ng-template>
+</div>
+<div>
+    <h1>Switch Case</h1>
+    <div [ngSwitch]="feedback">
+        <p *ngSwitchCase="'good'">Good</p>
+        <p *ngSwitchCase="'verygood'">Very Good</p>
+        <p *ngSwitchCase="'bad'">Bad</p>
+        <p *ngSwitchDefault>Your input is not matching</p>
+    </div>
+
+    <div [ngSwitch]="feedback">
+        <ng-template [ngSwitchCase]="'good'">
+            <h3>Good</h3>
+        </ng-template>
+        <ng-template [ngSwitchCase]="'verygood'">
+            <h3>Very Good</h3>
+        </ng-template>
+        <ng-template [ngSwitchCase]="'bad'">
+            <h3>bad</h3>
+        </ng-template>
+        <ng-template ngSwitchDefault>
+            <h3>Your input is not matching</h3>
+        </ng-template>
+    </div>
+</div>

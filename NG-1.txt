@@ -1079,6 +1079,1606 @@ in angular dom event object is avaiable via "$event" variable
 $event variable should be passed as arg to the listener.
 
 ngModel - It is object used to transfer data between ui and component
+.....................................................................................
+			  Custom Events
+....................................................................................
+
+Component Communcation:
+
+1.Parent to child - via props
+2.Child to Parent - via Custom Events
+3.Across Components -via Services
+
+
+<div>
+    <h1>Parent</h1>
+    <h2>Data From Child {{data}}</h2>
+</div>
+<hr>
+<app-childeventsemitter (onRequest)="receive($event)" ></app-childeventsemitter>
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-parenteventemitter',
+  templateUrl: './parent.component.html',
+  styles: [
+  ]
+})
+export class ParentComponent implements OnInit {
+
+  data!: string;
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+  receive(data: string) {
+    this.data = data
+  }
+
+}
+....
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+
+@Component({
+  selector: 'app-childeventsemitter',
+  templateUrl: './childeventsemitter.component.html',
+  styles: [
+  ]
+})
+export class ChildeventsemitterComponent implements OnInit {
+
+  value: string = ""
+
+  //custom event
+  //onRequest Name of the custom event
+  @Output()
+  onRequest = new EventEmitter<string>();
+
+  constructor() { }
+
+  ngOnInit(): void {
+
+  }
+  sendToParent() {
+    this.onRequest.emit(this.value)
+    this.value = ""
+  }
+
+}
+<h1>Child Component</h1>
+<input [(ngModel)]="value">
+<button (click)="sendToParent()">Send Data to Parent</button>
+
+<!-- #VariableName -->
+<div>
+    <h1>Template Reference</h1>
+    <input #phone>
+    <button (click)="callPhone(phone.value)">Template</button>
+</div>
+<div>
+<form #myform="ngForm" (ngSubmit)="myform">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" ngModel required/>
+ </form>
+ <div [hidden]="!myform.form.valid">
+      <p>Form submitted</p>
+ </div>
+</div>
+............................XXXXXXXXX...............................................
+
+<div>
+    <ul>
+        <li *ngFor="let skill of skills">
+            <p (click)="changeColor()" [class.highlight]="isColorChanged">{{skill}}</p>
+        </li>
+    </ul>
+
+
+</div>
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-dynamiccss',
+  templateUrl: './dynamiccss.component.html',
+  styles: [
+  ]
+})
+export class DynamiccssComponent implements OnInit {
+
+  isColorChanged: boolean = false
+  skills: string[] = ["Java", "JavaScript", "Python", "Angular"]
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+  changeColor() {
+    this.isColorChanged = !this.isColorChanged
+  }
+}
+.....................................................................................				Pipes and Directives
+....................................................................................
+			 Pipes-Data Formating
+.....................................................................................
+<div>
+    <h1>String Pipes</h1>
+    <h2>Name {{name | uppercase}}</h2>
+    <h2>Name {{name | titlecase}}</h2>
+</div>
+<div>
+    <h1>Number Pipes</h1>
+    <h2>Stock Price {{stockValue | currency}}</h2>
+    <h2>Stock Price {{stockValue | currency:'INR'}}</h2>
+</div>
+<div>
+    <h1>Date</h1>
+    <p>{{date | date}}</p>
+    <p>{{date | date:'short'}}</p>
+    <p>{{date | date:'dd/MM/yyyy'}}</p>
+</div>
+<div>
+    <!-- Pipe chaining -->
+    <p>{{date | date:'medium' | uppercase}}</p>
+</div>
+<div>
+    <h1>Object -JSON</h1>
+    <p>{{emp.id}} {{emp.name}} {{emp.city}}</p>
+    <p>{{emp | json}}</p>
+
+</div>
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-pipe',
+  templateUrl: './pipe.component.html',
+  styles: [
+  ]
+})
+export class PipeComponent implements OnInit {
+  name: string = "subramanian"
+  stockValue: number = 10.7865
+  date:Date = new Date()
+  //object
+  emp = {
+    id: 1,
+    name: 'Subramanian',
+    city: 'Coimbatore'
+  }
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+.....................................................................................
+				Custom
+.....................................................................................
+	Asc | dec
+
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'decimalFraction'
+})
+export class DecimalFractionPipe implements PipeTransform {
+
+  transform(value: number, input: number = 1): string {
+    console.log('pipes are working...')
+    return value.toFixed(input);
+  }
+
+}
+
+<div>
+    <h1>Custom Pipe</h1>
+    {{stockValue | decimalFraction}}
+    {{stockValue | decimalFraction:2}}
+    {{stockValue | decimalFraction:3}}
+
+</div>
+.....................................................................................
+
+					Directives
+..............................................................................................
+What is directive?
+  Directive is custom element / attribute..
+
+<app-root> ,<app-root [title]>
+
+
+Types of Directives:
+1.Template directive
+2.Structural directive
+3.Attribute directive
+
+1.Template directive
+   The directive with Template ; all components create template directive
+  <app-root> ----------------template directive
+  <app-profile>--------------template directive
+
+All component's meta data is inherited from Directive meta.
+Directive is parent , Component is child
+
+Every component is directive.
+
+
+
+2.Structural Directive
+   It is type of directive, used to change HTML Layouts.
+   They shape or reshape the DOM's "Structure" typically by adding,removing and manipulating
+   the host elements to which they attached.
+   
+  -Host element means html elements eg div,span,li,table.
+  -It is one of the "special attribute" directive
+  -All structural directive starts with "*" notation.
+
+*ngFor -  Structural Directive
+
+Built in structural directives
+
+1.*ngFor : for loop
+2.*ngIf  : if condition
+3.*ngSwitch : switch
+
+..............................................................................................			 BrowserModule vs CommonModule
+
+Where are structural directives?
+
+Structural directives are part of two modules
+
+1.BrowserModule
+   BrowserModule = {Structurals directives + Browser features + other common angular instructions}
+   BrowserModule should be injected only inside app module, we should not inject inside other submodules.
+
+2.CommonModule
+  CommonModule is extracted module from BrowserModule which contains Structural directives only.
+ Where ever in sub modules, you want to use structural directives ,CommonModule Must have been injected.
+
+
+
+List /Array rendering:
+......................
+
+Layouts:
+1.List view Layout
+   -ul li
+2.Card View Layout
+  div
+3.Grid View Layout
+  table tr td
+
+
+1.for Loop: *ngFor
+
+-where ever you want to repeate elements
+
+element could be dom element or custom elements
+
+eg:
+ <anyelement *ngFor="condition">
+
+ <div *ngFor="let variableName of arrayname">
+       {{VariableName.property}}
+ </div>
+ This code will create more div elements
+
+ <app-item-list *ngFor="">
+Static view:
+<ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+
+    </ul>
+
+<div>
+    <h1 style="text-align: center;">For loop</h1>
+
+    <!--ul element-->
+    <ul>
+        <li *ngFor="let i of numbers">{{i}}</li>
+    </ul>
+    <!--Ui element for tod-->
+    <ul class="list-group">
+        <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let todo of todos">
+            <span class="badge badge-primary badge-pill"> {{todo.id}} </span> {{todo.title}}
+        </li>
+
+    </ul>
+    <div class="card" *ngFor="let todo of todos">
+        <h5 class="card-header">{{todo.id}}</h5>
+        <div class="card-body">
+            <h5 class="card-title">{{todo.userId}}</h5>
+            <p class="card-text">{{todo.title}}</p>
+            <a href="#" class="btn btn-primary">Update</a>
+        </div>
+    </div>
+</div>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+
+eg:
+<div>
+    <ul>
+        <li *ngFor="let course of courses">
+            {{course}}
+        </li>
+    </ul>
+</div>
+<h2>Users data</h2>
+<div>
+    <div *ngFor="let user of users">
+        <h3>{{user.username}}</h3>
+        <p>{{user.email}}</p>
+        <address>
+            <p>{{user.address.street}},{{user.address.city}}</p>
+        </address>
+    </div>
+</div>
+
+import { Component, OnInit } from '@angular/core';
+import { USERS } from '../mock-data/users';
+
+@Component({
+  selector: 'app-forloop',
+  templateUrl: './forloop.component.html',
+  styles: [
+  ]
+})
+export class ForloopComponent implements OnInit {
+
+  courses: Array<string> = ["javascript", "angular", "Microservices"]
+
+  users: Array<any> = USERS;
+
+
+
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
+}
+.............................................................................................
+				*ngIf
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-conditionalrendering',
+  template: `
+  <div *ngIf="isEnabled; else mycondition">
+    <h1>You have Facility!</h1>
+</div>
+<ng-template #mycondition>
+    <h1>Sorry! Facility is not available</h1>
+</ng-template>
+ 
+  <h1>Progress Bar </h1>
+  <div *ngIf="loading; else notLoading  ">
+    <h2>{{status}}</h2>
+</div>
+<ng-template #notLoading>
+    <div *ngFor="let user of users">
+        <h3>{{user.id}}</h3>
+        <p>{{user.name}}</p>
+     </div>
+</ng-template>
+  `,
+  styles: [
+  ]
+})
+export class ConditionalrenderingComponent implements OnInit {
+  isEnabled: boolean = true
+  //progress bar 
+  loading: boolean = true;
+  status: string = "loading....."
+  users: Array<any> = []
+
+  constructor() { }
+
+  ngOnInit(): void {
+    setTimeout(() => {
+      this.users = [
+        { id: 1, name: 'a1' },
+        { id: 2, name: 'a2' },
+        { id: 3, name: 'a3' },
+      ]
+      this.loading = !this.loading;
+    }, 10000)
+  }
+
+}
+..............................................................................................				ngSwitch
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-switchcase',
+  template: `
+    <input [(ngModel)]="input">
+<button (click)="showFeedback()">Show Feedback</button>
+
+<div [ngSwitch]="feedback">
+    <p *ngSwitchCase="'good'">Good</p>
+    <p *ngSwitchCase="'verygood'">Very Good</p>
+    <p *ngSwitchCase="'bad'">Bad</p>
+    <p *ngSwitchDefault>Your input is not matching</p>
+</div>
+
+<div [ngSwitch]="feedback">
+    <ng-template [ngSwitchCase]="'good'">
+        <h3>Good</h3>
+    </ng-template>
+    <ng-template [ngSwitchCase]="'verygood'">
+        <h3>Very Good</h3>
+    </ng-template>
+    <ng-template [ngSwitchCase]="'bad'">
+        <h3>bad</h3>
+    </ng-template>
+    <ng-template ngSwitchDefault>
+        <h3>Your input is not matching</h3>
+    </ng-template>
+</div>
+  `,
+  styles: [
+  ]
+})
+export class SwitchcaseComponent implements OnInit {
+
+  input: string = ""
+  feedback: string = "good"
+  constructor() { }
+  showFeedback() {
+    this.feedback = this.input
+  }
+
+  ngOnInit(): void {
+  }
+
+}
+.....................................................................................
+			  Attribute Directives
+....................................................................................
+Enchancing the existing dom elements by adding new attributes(custom)
+
+<h1 foo='foo'>Hello</h1>
+
+import { Directive, ElementRef, HostListener } from '@angular/core';
+
+@Directive({
+  selector: '[appHighlight]'
+})
+export class HighlightDirective {
+
+  constructor(private element: ElementRef) {
+    console.log('high light directive is working')
+    console.log(element.nativeElement)
+  }
+  @HostListener('mouseenter')
+  public onMouseEnter() {
+    this.element.nativeElement.style.cursor = 'help'
+    this.element.nativeElement.style.fontSize = "x-large";
+  }
+  @HostListener('mouseleave')
+  public onMouseLeave() {
+    this.element.nativeElement.style.fontSize = "x-small";
+  }
+
+}
+.....................................................................................
+				  Forms
+..............................................................................................
+
+Forms are used to get input from the User.
+
+Types of Forms
+
+1.Template driven Forms -  Using HTML
+2.Reactive forms -  Via coding
+
+Template Driven forms:
+.......................
+
+
+Forms are used to get input from the User.
+
+Types of Forms
+
+1.Template driven Forms
+2.Reactive forms
+
+
+Tempate Driven Forms:
+...................
+
+Steps:
+
+1.bootstrap must have been installed -The Forms internally uses bootstrap template
+
+>npm install bootstrap --save
+
+1.FormsModule
+
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+2.declare FormModel Object going to hold form field data
+
+export class PostFormModel{
+    constructor(public id: number, public title: string, public author: string){
+    }
+}
+
+3.Create Model Object inside component.
+
+export class AppComponent {
+  post: any;
+  constructor() {
+    this.post = new PostFormModel(Math.random(), 'Learn Angular', 'Misko')
+  }
+}
+
+Step 4 : 
+Create inital form Template
+ -Forms should have bootstrap style
+
+<div class="container">
+  <h1>Post Form</h1>
+  <form>
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" class="form-control" id="title" required>
+    </div>
+
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" class="form-control" id="name" required>
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit</button>
+
+  </form>
+</div>
+
+
+Step 5:
+
+Data binding
+   Binding textbox(form controls) with Model Object
+   We have many ways
+  1.through instance variable,$event
+  2.through [(ngModel)]="post.title"
+   ngModel = > it is an object from "FormsModule"
+   ngModel it is dto object=>data transfering between view and component.
+
+//
+Form Control value property is bound with name property of input control.
+
+<input [(ngModel)]="post.title" name="title" type="text" class="form-control" id="title" required>
+
+    <form>
+       <!--TODO: Remove this once testing over-->
+       <pre>{{post | json}}</pre>
+      <div class="form-group">
+         <label for="title">Title</label>
+         <input [(ngModel)]="post.title" name="title" type="text" class="form-control" id="title" required>
+       </div>
+       <div class="form-group">
+         <label for="name">Name</label>
+         <input [(ngModel)]="post.author" name="author" type="text" class="form-control" id="name" required>
+       </div>
+   
+       <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+
+.....................................................................................
+
+*****************************************************************************************
+					Vaildation
+///////////////////////////////////////////////////////////////////////////////////////////
+
+Objects In the FormsModule:
+
+NgForm : 
+
+ It is object representation of "form" element.
+ Can be used to control form validations.
+ in order to access the NgForm object inside template. You have to use template reference
+
+<form #postForm> =>postForm points HTMLForm Object
+
+ngForm is Object which inherits HTMLForm
+
+class ngForm extends HTMLForm{
+  +extra behaviour=>Ready made validation code
+  +form submission behaviours
+}
+
+What is meaning of this code <form #postForm>?
+
+ HTMLFORMMobject ----postForm
+
+dummy code for the above template
+ let postForm =  new HTMLForm();
+
+what we need
+ let postForm = new NgForm()
+
+<form #postForm="ngForm"> 
+
+
+The variable postForm is now a reference to the NgForm 
+directive that governs the form as a whole.
+
+The NgForm directive:
+....................
+
+What NgForm directive? You didn't add an NgForm directive before.
+
+Angular did. Angular automatically creates and attaches
+ an NgForm directive to the <form> tag.
+
+"The NgForm directive supplements the form element with additional features. 
+
+It holds the controls you created for the elements  with an "ngModel directive" and name attribute, and monitors their properties, including their validity.
+ 
+It also has its own valid property which is true only if every contained control is valid."
+
+Note: NgForm is built Object ,has more logic for simlifying our form handling process.
+
+********************************************************************************************
+********************************************************************************************
+NgModel :
+
+ 1.Transfering data between UI and Controller .
+
+NgModel not only for data transfer, which does so many other things beyond twoway data binding.
+
+Track control(form element) state and validity with ngModel:
+............................................................
+
+Form element states:
+
+Angular provides built-in css classes to track form control state"
+
+State 	                         Class if true 	  Class if false
+
+The control has been visited.  	  ng-touched 	    ng-untouched
+The control's value has changed.  ng-dirty 	    ng-pristine
+The control's value is valid. 	  ng-valid 	    ng-invalid
+
+State Tracking Steps:
+
+1.Look but don't touch.
+2.Click inside the name box, then click outside it.
+3.Add slashes to the end of the name.
+4.Erase the name.
+
+ng-untouched - if you dont touch
+ng-touched - if you touch
+ng-dirty - if you changed
+ng-invalid - if you remove all-empty field
+
+Step 6:
+
+Add custom CSS for visual feedback:
+
+Valid + Required - green Color
+Valid + optional - white color
+Invalid (required | optional) - red Color
+
+Angular Css:
+
+.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form)  {
+  border-left: 5px solid #a94442; /* red */
+}
+
+****************************************************************************************
+
+Adding validation block to our code:
+...................................
+
+NgModel is Child Object of FormControl Object
+
+class  Input{
+ 
+}
+class NgModel extends Input{
+  //extra features : state tracking,enabling validation.
+}
+
+<input #Xx> -Here xxPoints only Input
+
+<input #Xx="ngModel"> -Here xx points ngModel
+
+      <input  [(ngModel)]="post.title" #errorMsg1="ngModel" name="title" type="text" class="form-control" id="title" required>
+
+Step 7: Add Error Block
+<div class="container">
+  <h1>Post Form</h1>
+  <form #postForm="ngForm">
+    <!--TODO: Remove this once testing over-->
+    <pre>{{post | json}}</pre>
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input [(ngModel)]="post.title" #errorMsg1="ngModel" name="title" type="text" class="form-control" id="title"
+        required>
+      <div [hidden]="errorMsg1.valid || errorMsg1.pristine" class="alert alert-danger">
+        title is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input [(ngModel)]="post.author" #errorMsg2="ngModel" name="author" type="text" class="form-control" id="name"
+        required>
+      <div [hidden]="errorMsg2.valid || errorMsg2.pristine" class="alert alert-danger">
+        Author is required
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success">Submit</button>
+
+  </form>
+</div>
+
+Step 7: Disabling submit button until the whole form is valid.
+*******************************************************************************************
+
+Disabling submit button in case any validation fails:
+
+  <button type="submit" class="btn btn-success" [disabled]="!postForm.form.valid">Submit</button>
+
+*************************************************************************************
+
+Full code without Validation:
+<div>
+    <h1>Post Registraion</h1>
+    <!-- todo: remove once form is completed :only for dev -->
+    {{post | json}}
+    <!-- Form template -->
+    <form>
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" [(ngModel)]="post.title" name="title" class="form-control" id="title" required>
+        </div>
+        <div class="form-group">
+            <label for="name">Author Name</label>
+            <input type="text" [(ngModel)]="post.author" name="author" class="form-control" id="name" required>
+        </div>
+        <!-- combo -->
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select class="form-control" id="category" name="category" [(ngModel)]="post.category">
+                <option *ngFor="let cat of categories" [value]="cat">
+                    {{cat}}
+                </option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+</div>
+.....................................................................................
+
+With validation:
+<div>
+    <h1>Post Registraion</h1>
+    <!-- todo: remove once form is completed :only for dev -->
+    {{post | json}}
+    <!-- Form template -->
+    <form #postForm="ngForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" [(ngModel)]="post.title" name="title" class="form-control" id="title" #titleErr="ngModel"
+                required>
+        </div>
+        <!-- validation block -->
+        <div [hidden]="titleErr.valid || titleErr.pristine" class="alert alert-danger">
+            Title is Required
+        </div>
+
+        <div class="form-group">
+            <label for="name">Author Name</label>
+            <input type="text" [(ngModel)]="post.author" name="author" class="form-control" id="name"
+                #authorNameErr="ngModel" required>
+        </div>
+        <!-- validation block -->
+        <div [hidden]="authorNameErr.valid || authorNameErr.pristine" class="alert alert-danger">
+            Author is Required
+        </div>
+        <!-- combo -->
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select class="form-control" id="category" name="category" [(ngModel)]="post.category">
+                <option *ngFor="let cat of categories" [value]="cat">
+                    {{cat}}
+                </option>
+            </select>
+        </div>
+        <button type="submit" [disabled]="!postForm.form.valid" class="btn btn-success">Submit</button>
+    </form>
+</div>
+
+import { Component, OnInit } from '@angular/core';
+import { Post } from './post.model';
+
+@Component({
+  selector: 'app-templatedriven',
+  templateUrl: './templatedriven.component.html',
+  styles: [
+  ]
+})
+export class TemplatedrivenComponent implements OnInit {
+  post: any
+  categories: Array<string> = ["User interface", "MicroServices", "Devops"];
+
+  constructor() {
+    //create model object: set inital default value for the form
+    this.post = new Post(Math.random(), 'Learn Angular', 'Misko', this.categories[0])
+  }
+ 
+  onSubmit() {
+     console.log(this.post)
+  }
+
+  ngOnInit(): void {
+  }
+
+}
+.....................................................................................
+				MVC - Services
+.....................................................................................
+
+What is service?
+Service is object going to hold state and biz logic
+Service object must be injected into component
+Service object is created by angular.
+
+
+How to declare service class?
+
+@Injectable({
+ providedIn:'root'
+})
+export class TodoService{
+
+}
+
+@Injectable()
+export class TodoService{
+
+}
+providers:[TodoService]
+
+Inside component/inside another service
+
+class TodoComponent{
+  constructor(private todoService:TodoService){}
+}
+
+Steps:
+ng g s todo/todo --skip-tests=true --flat=true
+
+import { Injectable } from '@angular/core';
+
+/**
+ * Injector:
+ *    It is low level program whoes responsible for creating objects
+ * Injector receives information(what are classes), based on that information, injector will create instances(object)
+ * In general , we configure classes(component,directive,pipe,module class) inside modules via declarations,imports,providers.
+ * Injector receives information from the modules, then accordingly objects will be created
+ * 
+ * Types of injector
+ * 1.global injector called root injector
+ * 2.sub module injector 
+ * 3.component level injector
+ * 
+ */
+@Injectable({
+  providedIn: 'root' //you are telling that this service object should be created by root injector
+})
+export class TodoService {
+  constructor() { }
+}
+....................................................................................
+
+Simple work flow:
+
+src/app/todo/todo.service.ts
+
+
+import { Injectable } from '@angular/core';
+import { TODOS } from '../mockdata/todos';
+import { Todo } from '../types/todo.type';
+@Injectable({
+  providedIn: 'root' //you are telling that this service object should be created by root injector
+})
+export class TodoService {
+  constructor() { }
+
+  //biz method
+  public getTodos(): Array<Todo> {
+    return TODOS;
+  }
+
+}
+
+todo.component.ts
+import { Component, OnInit } from '@angular/core';
+import { Todo } from '../types/todo.type';
+import { TodoService } from './todo.service';
+
+@Component({
+  selector: 'app-todo',
+  templateUrl: './todo.component.html',
+  styles: [
+  ]
+})
+export class TodoComponent implements OnInit {
+
+  //place holder variable
+  todos: Array<Todo> = []
+
+  constructor(private todoService: TodoService) {
+    this.todos = this.todoService.getTodos()
+  }
+
+  ngOnInit(): void {
+  }
+
+}
+<div>
+    <div *ngFor="let todo of todos">
+        <h1>Id {{todo.id}}</h1>
+        <h4>Title {{todo.title}}</h4>
+        <h5>Status {{todo.completed ? "Completed" : "Not Completed"}}</h5>
+    </div>
+</div>
+...................................................................................
+			Page and state Initalization Process
+...................................................................................
+
+There are two phases:
+
+1.inital render
+  when first time the page is loaded into browser
+2.re render
+ after client interaction with events like, clicking,touching
+
+State can be loaded in both phases.
+
+In the inital render where state should initalized
+
+1.inside constructor
+
+export class TodoComponent implements OnInit {
+  //place holder variable
+  todos: Array<Todo> = []
+
+  constructor(private todoService: TodoService) {
+      //state initalization
+      this.todos = this.todoService.getTodos()
+  }
+
+  ngOnInit(): void {
+  }
+
+}
+inside constructor is not recommended due to performance issuses, ng do not recommended inside constructor.
+
+Rather than , we should initalize inside a special method "ngOnInit"
+...................................................................................
+			  Angular Component Life cycle Methods
+
+Life cycle methods are special methods, are called by angular runtime based on state of app.
+
+There are two basic state:
+
+1.init
+     when component is rendered 
+init is implemented via "ngOnInit" method of OnInit interface.
+
+Objective of init;
+
+1.if you want to do some async tasks like data fetching from services
+  timers,websocket connections
+
+2.destroy
+    when component is removed/destroyed
+
+2.if you want to do any resource clean up task, like closing websocket connection
+  closing streams,closing timers....
+
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Todo } from '../types/todo.type';
+import { TodoService } from './todo.service';
+
+@Component({
+  selector: 'app-todo',
+  templateUrl: './todo.component.html',
+  styles: [
+  ]
+})
+export class TodoComponent implements OnInit, OnDestroy {
+
+  //place holder variable
+  todos: Array<Todo> = []
+
+  constructor(private todoService: TodoService) { }
+
+  //init
+  ngOnInit(): void {
+    this.todos = this.todoService.getTodos()
+  }
+  //destroy
+  ngOnDestroy(): void {
+    console.log('Resource clean up method')
+  }
+
+}
+.....................................................................................
+			   Javascript and async implmentations
+....................................................................................
+
+
+Types of services:
+
+1.sync service
+   The controller is blocked until data is available.
+2.async service
+   The controller can continue even though the data is not available at the momement.
+
+Async Service:
+ 1. Non blocking way to access data.
+
+How to implement async programming in js?
+
+Js supports async programming model by default at language level.
+
+
+Programming style to implements async:
+......................................
+
+1.callback pattern
+2.Promise Pattern
+3.Promise and async ...await pattern	
+
+Advanced async pattern using Reactive Extensions(rx programming)
+4.rxjs - Angular uses this pattern	
+
+
+in order to implement async programming  we need two things
+
+1.high level async api
+	js provides lot of async apis
+
+ 1.timer api - delay some taks
+ 2.ajax api - for network calls
+ 3.websocket api - for network calls
+
+2.listener function/callback function
+   it is function gets called when data is available once in the process.
+ 
+Coding is pattern, we need to pass function as parameter to async api which is called
+callback function/listerner
+
+import { Injectable } from '@angular/core';
+import { TODOS } from '../mock-data/todos.mock';
+import { Todo } from '../types/todos.type';
+import { LoggerService } from '../utils/logger.service';
+
+
+@Injectable({
+  providedIn: 'root' // we ask angualar create this service object by root injector
+})
+export class TodoService {
+  //this service can have dependency of other services
+  constructor(private logger: LoggerService) { }
+
+  //biz apis :sync api
+  public getTodos(): Array<Todo> {
+    this.logger.log('...getTodos..')
+    return TODOS
+  }
+  //async version using callbacks
+  public getTodosUsingCallback(callback: Function) {
+    //async using timers
+    setTimeout(callback, 5000, TODOS);
+  }
+  //async version using Promises
+  public getTodosUsingPromise(): Promise<Array<Todo>> {
+    return new Promise((resolve, reject) => {
+      setTimeout(resolve, 5000, TODOS);
+    })
+  }
+
+}
+import { Component, OnInit } from '@angular/core';
+import { Todo } from '../types/todos.type';
+import { TodoService } from './todo.service';
+
+@Component({
+  selector: 'app-todos',
+  templateUrl: './todos.component.html',
+  styles: [
+  ]
+})
+export class TodosComponent implements OnInit {
+
+  //state
+  todos!: Array<Todo>;
+  loading: boolean = true;
+  status: string = "loading....."
+
+  //constructors must be used only for dependency injection
+  constructor(private todoService: TodoService) { }
+
+  async ngOnInit() {
+    //state is initalized inside constructor
+    //sync api call
+    // this.todos = this.todoService.getTodos();
+    //async api call using callbacks
+    // this.todoService.getTodosUsingCallback((todos: Todo[]) => {
+    //      this.todos = todos
+    //      this.loading = !this.loading
+    // })
+    //Promise version
+    // this.todoService.getTodosUsingPromise().then((todos: Todo[]) => {
+    //   this.todos = todos
+    //   this.loading = !this.loading
+    // })
+    this.todos = await this.todoService.getTodosUsingPromise()
+    this.loading = !this.loading
+
+  }
+
+  ngOnDestroy(): void {
+    //this method is called when component destroyed
+  }
+
+}
+.....................................................................................
+				Rxjs -Reactive Programming
+.....................................................................................
+
+What is rxjs?  
+  Reactive Extensions Library for JavaScript 
+
+What is Reactive Programming?
+  An API for asynchronous programming with observable streams
+
+Reactive programming =  async + streaming
+
+Streaming => flow of data 
+Observable Stream = You can observe the flow of data while observing you can apply operators to process the data
+
+How to implement streaming based programming?/Rx Programming?
+
+There are design patterns
+
+1.Observable/Observer  Design Patterns
+2.iterator design pattern
+3.functional programming patterns like pure function,immutablity
+...................................................................................
+		 Reactive Programming is language independant
+
+Reactive Programming is implemented in many languages
+
+Java
+ -rxjava
+ -Project Reactor
+ -Mutiny
+
+javascript
+ rxjs
+.....................................................................................
+			rxjs core concepts
+..................................................................................
+Core Concepts and Types:
+.......................
+
+Observable: represents the idea of an invokable collection of future values or events.
+
+Observer: is a collection of callbacks that knows how to listen to values delivered by the Observable.
+
+Subscription: represents the execution of an Observable, is primarily useful for cancelling the execution.
+
+Operators: are pure functions that enable a functional programming style of dealing with collections with operations like map, filter, concat, reduce, etc.
+
+Subject: is the equivalent to an EventEmitter, and the only way of multicasting a value or event to multiple Observers.
+
+Schedulers: are centralized dispatchers to control concurrency, allowing us to coordinate when computation happens on e.g. setTimeout or requestAnimationFrame or others.
+.....................................................................................
+			  Rxjs and Angular
+.....................................................................................
+
+Angular uses rxjs in many parts of the app.
+
+1.http calls
+2.event emitter
+3.routers
+etc.....
+....................................................................................
+				Observable 
+
+it is primiary producer object which streams data.
+
+Subscriber listens for three things
+
+1. for data - next    
+2. for error - error
+3. completed- completed
+
+
+import { Component, OnInit } from '@angular/core';
+import { GreeterstreamService } from './greeterstream.service';
+
+@Component({
+  selector: 'app-greeterstream',
+  templateUrl: './greeterstream.component.html',
+  styles: [
+  ]
+})
+export class GreeterstreamComponent implements OnInit {
+
+  constructor(private greeterService: GreeterstreamService) { }
+
+  ngOnInit(): void {
+    //listen for
+    this.greeterService.getGreetStream().subscribe({
+      next: (data) => {
+        console.log(data)
+      },
+      error: err => {
+        console.log(err)
+      },
+      complete() {
+        console.log('Stream Completed')
+      }
+    })
+  }
+
+}
+..
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class GreeterstreamService {
+  constructor() { }
+
+  //api reactive api
+  public getGreetStream():Observable<string> {
+    //stream
+    return new Observable(subscriber => {
+      subscriber.next("Hello")
+      subscriber.next("Hai")
+      subscriber.next("Welcome")
+      subscriber.complete()
+      subscriber.next('hhh')
+    })
+  }
+
+}
+...............................................................................
+
+stream is closed when error or complete is called.
+
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class GreeterstreamService {
+  constructor() { }
+
+  //api reactive api
+  public getGreetStream():Observable<string> {
+    //stream
+    return new Observable(subscriber => {
+      subscriber.next("Hello")
+      subscriber.next("Hai")
+      subscriber.error(new Error('something went wrong'))
+      subscriber.next("Welcome")
+      subscriber.complete()
+      subscriber.next('hhh')
+    })
+  }
+
+}
+..................................................................................
+			Observables are lazy
+.................................................................................
+
+Lets assume  if you call  method like below
+
+  public getGreeter() {
+    return 'Hello';
+  }
+
+method returns with data and close the flow.
+getGreeter()
+
+ public getStream(){
+    return new Observable(subscriber => {
+      subscriber.next("Hello")
+      subscriber.next("Hai")      
+    }) 
+ }
+Observable stream=getStream()
+here we have not received data, still data not returned.
+once if you call subscribe method, then it begins to emit data
+.....................................................................................	
+			Subscription
+
+Represents a disposable resource, such as the execution of an Observable. A Subscription has one important method, unsubscribe, that takes no argument and just disposes the resource held by the
+
+/ This cancels the ongoing Observable execution which
+// was started by calling subscribe with an Observer.
+subscription.unsubscribe();
+
+import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { GreeterstreamService } from './greeterstream.service';
+
+@Component({
+  selector: 'app-greeterstream',
+  templateUrl: './greeterstream.component.html',
+  styles: [
+  ]
+})
+export class GreeterstreamComponent implements OnInit {
+
+  //Subscrition object to cancel the stream
+  subscription!: Subscription
+
+  constructor(private greeterService: GreeterstreamService) { }
+
+  ngOnInit(): void {
+    //listen for
+    this.subscription = this.greeterService.getGreetStream().subscribe({
+      next: (data) => {
+        console.log(data)
+      },
+      error: err => {
+        console.log(err)
+      },
+      complete() {
+        console.log('Stream Completed')
+      }
+    })
+  }
+  //When the component is destroyed
+  ngOnDestroy() {
+    console.log('Stream has been unsubscribed')
+    this.subscription.unsubscribe()
+  }
+
+}
+...................................................................................
+			 Data Sources
+...................................................................................
+
+Form of data in Javascript
+
+1.via simple variables
+  let a=10;
+2.via object
+   let b= {}
+3.via array
+   let c=[{}]
+4.Map
+ 
+5.Promises
+
+any data source can be converted into observable(stream).
+
+Types of operators
+1.Pipeable Operators 
+2.Creational Operators
+
+Creational Operators
+  are used to create new Observable from the existing datasources
+
+new Observable() - create Observable from scratch
+  if you want to create your own datasource.
+
+.................................................................................
+			  //using operators
+
+of
+https://rxjs.dev/api/index/function/of
+
+
+  public getStream(): Observable<string> {
+    return of('Hello', 'Hai', 'welcome', 'How are you')
+  }
+....................................................................................
+
+from
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ArraystreamService } from './arraystream.service';
+
+@Component({
+  selector: 'app-arraystream',
+  templateUrl: './arraystream.component.html',
+  styles: [
+  ]
+})
+export class ArraystreamComponent implements OnInit {
+
+  numList!: number[]
+  numList$!:Observable<number[]>
+
+  constructor(private listService: ArraystreamService) { }
+
+  ngOnInit(): void {
+    this.listService.getNumbersFromList().subscribe({
+      next(data) {
+        console.log(data)
+      }
+    })
+    this.listService.getNumberList().subscribe({
+      next: (data) => {
+        this.numList = data
+      }
+    })
+    //
+    this.numList$ = this.listService.getNumberList();
+
+  }
+
+}
+import { Injectable } from '@angular/core';
+import { from, of, Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ArraystreamService {
+
+  constructor() { }
+
+  public getNumbersFromList(): Observable<number> {
+    const list: Array<number> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    return from(list)
+  }
+  public getNumberList(): Observable<number[]> {
+    const list: Array<number> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    return of(list)
+  }
+
+}
+.....................................................................................
+
+Other Datasources:
+
+//promise
+const promise = Promise.resolve('Hello!!');
+const promiseSource = from(promise);
+promiseSource.subscribe(data => console.log(data), err => console.log(err), () => console.log('done'));
+
+Promise vs Observable
+
+Promise is fire and forget model
+Observable is stream model
+
+//collection as Observable
+const map = new Map();
+map.set(1,"subramanian");
+map.set(2,"Shirisha");
+
+const mapSource=from(map);
+mapSource.subscribe(data => console.log(data), err => console.log(err), () => console.log('done'));
+
+//char array strings
+const stringSource=from('Hello world');
+stringSource.subscribe(data => console.log(data), err => console.log(err), () => console.log('done'));
+
+..................................................................................
+range:
+ i want to generate sequence of numbers from 1 to 1000
+
+//range
+import { range } from 'rxjs';
+
+//want to generate sequence
+
+const rangeSource = range(1, 1000)
+rangeSource.subscribe(data => console.log(data), err => console.log(err), () => console.log('done'));
+
+interval:
+  i want to emit sequence of numbers based on timers / time frame
+ every 1sec generate numbers
+
+//range
+import { interval } from 'rxjs';
+
+//want to generate sequence
+
+const intervalSource = interval(1000)
+intervalSource.subscribe(data => console.log(data),
+ err => console.log(err), () => console.log('done'));
+////////////////////////////////////////////////////////
+
+Turing "dom events / node js events" into observable.
+
+i have mouse move event / click events want to convert into observable so that i can do
+very usefull apps.
+
+  if i typing search items,want to wait for some time and fire ajax calls.
+
+fromEvent
+   how to observe mouse clicks
+//range
+import { fromEvent } from 'rxjs';
+
+//want to generate sequence
+
+const source = fromEvent(document, 'click')
+
+source.subscribe(data => console.log(data), 
+err => console.log(err), () => console.log('done'));
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+ajax calls in observable
+
+//range
+import { ajax } from 'rxjs/ajax';
+
+//want to generate sequence
+const url = "https://jsonplaceholder.typicode.com/todos";
+const source = ajax(url)
+
+source.subscribe(data => console.log(data.response), 
+err => console.log(err), () => console.log('done'));
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+empty:
+  Observable that immediately completes - send only complete signal
+
+import {empty} from 'rxjs';
+
+const emptySource = empty();
+emptySource.subscribe(data => console.log(data), err => console.log(err), () => console.log('done'));
+/////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,0 +1,10 @@
+<div *ngIf="loading; else notLoading  ">
+    <h2>{{status}}</h2>
+</div>
+<ng-template #notLoading>
+    <div *ngFor="let todo of todos">
+        <p>{{todo.id}}</p>
+        <p>{{todo.title}}</p>
+        <p>{{todo.completed ? 'Done':'Not Done'}}</p>
+    </div>
+</ng-template>

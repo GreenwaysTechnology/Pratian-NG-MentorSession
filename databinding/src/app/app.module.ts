@@ -7,6 +7,9 @@ import { AttributebindingModule } from './attributebinding/attributebinding.modu
 import { PropsbindingModule } from './propsbinding/propsbinding.module';
 import { EventsbindingModule } from './eventsbinding/eventsbinding.module';
 import { FormsModule } from '@angular/forms';
+import { PipesModule } from './pipes/pipes.module';
+import { DirectivesModule } from './directives/directives.module';
+import { FormsappModule } from './formsapp/formsapp.module';
 
 @NgModule({
   declarations: [
@@ -18,7 +21,10 @@ import { FormsModule } from '@angular/forms';
     AttributebindingModule,
     PropsbindingModule,
     EventsbindingModule,
-    FormsModule
+    FormsModule,
+    PipesModule,
+    DirectivesModule,
+    FormsappModule
   ],
   providers: [],
   bootstrap: [AppComponent]
